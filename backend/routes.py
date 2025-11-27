@@ -16,9 +16,9 @@ songs_list: list = json.load(open(json_url))
 
 # client = MongoClient(
 #     f"mongodb://{app.config['MONGO_USERNAME']}:{app.config['MONGO_PASSWORD']}@localhost")
-mongodb_service = os.environ.get('MONGODB_SERVICE')
+mongodb_service = "172.21.55.81" # os.environ.get('MONGODB_SERVICE')
 mongodb_username = 'root'
-mongodb_password = os.environ.get('MONGODB_PASSWORD')
+mongodb_password = "5vz3L0BBtEheAtQvOIBT6zFd" # os.environ.get('MONGODB_PASSWORD')
 mongodb_port = 27107
 
 print(f'The value of MONGODB_SERVICE is: {mongodb_service}')
@@ -79,3 +79,16 @@ def get_song_by_id(id: int):
     except:
         return {"message": "song with id not found"}, 404
     
+
+@app.route("/song", methods=["POST"])
+def creat_song():
+    song = request.get_json()
+
+    if any(s['id'] == song['id'] for s in songs_list):
+        return {"message": "Song is already added"}, 302
+
+    songs_list.append(song)
+
+    return jsonify(song), 201
+
+
