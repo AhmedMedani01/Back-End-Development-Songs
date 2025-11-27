@@ -62,3 +62,7 @@ def count():
 
     return {"message": "Internal server error"}, 500
 
+@app.route("/song")
+def songs():
+    songs_list = list(db.songs.find({}))
+    return {"songs": parse_json(songs_list)}, 200
