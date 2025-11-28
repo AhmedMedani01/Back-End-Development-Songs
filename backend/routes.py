@@ -9,6 +9,8 @@ from pymongo.errors import OperationFailure
 from pymongo.results import InsertOneResult
 from bson.objectid import ObjectId
 import sys
+from flask_api import status as HTTPstatus
+
 
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 json_url = os.path.join(SITE_ROOT, "data", "songs.json")
@@ -111,3 +113,12 @@ def update_song(id):
         return {"message": "song found, but nothing updated"}, 200
     else:
         return {"message": "song updated successfully"}, 201
+
+@app.route("/song/<int:id>", methods=["DELETE"])
+def delete_song(id):
+    status = db.songs.delete_one({"id": id})
+
+    if status.deleted_count == 0:
+        return {"message": "song not found"}, 404
+
+    return "", HTTPstatus.HTTP_204_NO_CONTENT
