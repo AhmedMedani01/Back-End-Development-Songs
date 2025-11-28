@@ -88,7 +88,12 @@ def creat_song():
         return {"message": "Song is already added"}, 302
 
     songs_list.append(song)
-
     return jsonify(song), 201
 
-
+@app.route("song/<int:id>", methods=["PUT"])
+def update_song(id):
+    song = request.get_json()
+    # if any(s["id"] == song["id"] for s in songs_list):
+    found = db.songs.find_one({"id": id})
+    print(result)
+    return "Ok", 200
