@@ -16,9 +16,9 @@ songs_list: list = json.load(open(json_url))
 
 # client = MongoClient(
 #     f"mongodb://{app.config['MONGO_USERNAME']}:{app.config['MONGO_PASSWORD']}@localhost")
-mongodb_service = "172.21.55.81" # os.environ.get('MONGODB_SERVICE')
+mongodb_service = "172.21.150.156" # os.environ.get('MONGODB_SERVICE')
 mongodb_username = 'root'
-mongodb_password = "5vz3L0BBtEheAtQvOIBT6zFd" # os.environ.get('MONGODB_PASSWORD')
+mongodb_password = "lzmuLlNBIQyGFNk26P6xM7zg" # os.environ.get('MONGODB_PASSWORD')
 mongodb_port = 27107
 
 print(f'The value of MONGODB_SERVICE is: {mongodb_service}')
@@ -90,10 +90,24 @@ def creat_song():
     songs_list.append(song)
     return jsonify(song), 201
 
-@app.route("song/<int:id>", methods=["PUT"])
+@app.route("/song/<int:id>", methods=["PUT"])
 def update_song(id):
-    song = request.get_json()
-    # if any(s["id"] == song["id"] for s in songs_list):
-    found = db.songs.find_one({"id": id})
-    print(result)
-    return "Ok", 200
+    song_in = request.get_json()
+
+    song = db.songs.find_one({"id": id})
+    if song is None:
+        return {"message": "song not found"}, 404
+
+    # Remove MongoDB _id for comparison if present
+    song.pop("_id", None)
+
+    if song == song_in:
+        return {"message": "song found, but nothing updated"}, 200
+
+    updated_data = {"$set": song_in}
+    result = db.songs.update_one({"id": id}, updated_data)
+
+    if result.modified_count == 0:
+        return {"message": "song found, but nothing updated"}, 200
+    else:
+        return {"message": "song updated successfully"}, 201
