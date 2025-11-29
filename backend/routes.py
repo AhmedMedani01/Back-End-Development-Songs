@@ -18,10 +18,10 @@ songs_list: list = json.load(open(json_url))
 
 # client = MongoClient(
 #     f"mongodb://{app.config['MONGO_USERNAME']}:{app.config['MONGO_PASSWORD']}@localhost")
-mongodb_service = "172.21.29.91" # os.environ.get('MONGODB_SERVICE')
-mongodb_username = 'root'
-mongodb_password = "vrGLnazlsR1Y5TmdE5XPqASu" # os.environ.get('MONGODB_PASSWORD')
-mongodb_port = 27107
+mongodb_service = os.environ.get('MONGODB_SERVICE')
+mongodb_username = os.environ.get('MONGO_USERNAME')
+mongodb_password = os.environ.get('MONGODB_PASSWORD') # "vrGLnazlsR1Y5TmdE5XPqASu" # 
+mongodb_port = os.environ.get('MONGO_PORT')
 
 print(f'The value of MONGODB_SERVICE is: {mongodb_service}')
 
